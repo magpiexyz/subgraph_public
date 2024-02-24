@@ -18,9 +18,7 @@ type EigenPointStatus @entity(immutable: false) {
 type ReferralStatus @entity(immutable: false) {
   id: Bytes!
   totalTvl: BigInt!
-  totalTvl2: BigInt!
   totalTvlPoints: BigInt!
-  totalTvlPoints2: BigInt!
   totalUsers: Int!
   totalGroups: Int!
 }
@@ -28,11 +26,8 @@ type ReferralStatus @entity(immutable: false) {
 type ReferralData @entity(immutable: false) {
   id: Bytes!
   tvl: BigInt!
-  tvl2: BigInt!
   tvlPoints: BigInt!
-  tvlPoints2: BigInt!
   referralPoints: BigInt!
-  referralPoints2: BigInt!
   referrer: Bytes!
   referralGroup: ReferralGroup!
   referralCount: Int!
@@ -40,15 +35,12 @@ type ReferralData @entity(immutable: false) {
   assets: [AssetHoldingData!]! @derivedFrom(field: "holder")
   lastEigenPointPerTVL: BigInt!
   eigenPoint: BigInt!
-  eigenPoint2: BigInt!
 }
 
 type ReferralGroup @entity(immutable: false) {
   id: Bytes!
   groupTVL: BigInt!
-  groupTVL2: BigInt!
   boost: BigInt!
-  boost2: BigInt!
   members: [ReferralData!]! @derivedFrom(field: "referralGroup")
 }
 
@@ -66,9 +58,7 @@ type ReferralLog @entity(immutable: false) {
   referrer: Bytes!
   referee: Bytes!
   referralPointEarned: BigInt!
-  referralPointEarned2: BigInt!
   referralPointsAccumulated: BigInt!
-  referralPointsAccumulated2: BigInt!
   timestamp: BigInt!
 }
 
@@ -86,8 +76,6 @@ type AssetDeposit @entity(immutable: true) {
   instantBalance: BigInt!
   instantTvl: BigInt!
   instantTvlPoint: BigInt!
-  instantTvl2: BigInt!
-  instantTvlPoint2: BigInt!
 }
 
 type AssetTransfer @entity(immutable: true) {
@@ -103,4 +91,13 @@ type TrackedMLRT @entity(immutable: true) {
   underlying: Bytes!
   strategy: Bytes!
   addedTimestamp: BigInt!
+}
+
+type mlrtLiquidityStatus @entity(immutable: false) {
+  id: String!
+  token0Balance: BigInt!
+  token1Balance: BigInt!
+  totalSupply: BigInt!
+  mlrtPerShare: BigInt!
+  updateTimestamp: BigInt!
 }
