@@ -1,0 +1,75 @@
+specVersion: 0.0.8
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: EigenpieStaking
+    network: mainnet
+    source:
+      abi: EigenpieStaking
+      address: "0x24db6717db1c75b9db6ea47164d8730b63875db7"
+      startBlock: 19090400
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AssetDeposit
+      abis:
+        - name: EigenpieStaking
+          file: ./abis/EigenpieStaking.json
+        - name: EigenpieConfig
+          file: ./abis/EigenpieConfig.json
+        - name: MLRT
+          file: ./abis/MLRT.json
+        - name: StrategyBaseTVLLimits
+          file: ./abis/StrategyBaseTVLLimits.json
+      eventHandlers:
+        - event: AssetDeposit(indexed address,indexed address,uint256,indexed address)
+          handler: handleAssetDeposit
+      file: ./src/eigenpie-staking.ts
+  - kind: ethereum
+    name: EigenpieConfig
+    network: mainnet
+    source:
+      abi: EigenpieConfig
+      address: "0x20b70E4A1883b81429533FeD944d7957121c7CAB"
+      startBlock: 19090420
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - AddedNewSupportedAsset
+      abis:
+        - name: EigenpieConfig
+          file: ./abis/EigenpieConfig.json
+        - name: StrategyBaseTVLLimits
+          file: ./abis/StrategyBaseTVLLimits.json
+      eventHandlers:
+        - event: AddedNewSupportedAsset(indexed address,indexed address,uint256)
+          handler: handleAddedNewSupportedAsset
+        - event: AssetStrategyUpdate(indexed address,indexed address)
+          handler: handleAssetStrategyUpdate
+        - event: ReceiptTokenUpdated(indexed address,indexed address)
+          handler: handleReceiptTokenUpdated
+      file: ./src/eigenpie-config.ts
+templates:
+  - name: MLRT
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: MLRT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/MLRT.ts
+      entities:
+        - MLRT
+      abis:
+        - name: MLRT
+          file: ./abis/MLRT.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer

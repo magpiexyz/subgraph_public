@@ -1,0 +1,106 @@
+type EigenPointUpdateLog @entity(immutable: true) {
+  id: Bytes!
+  incomePoints: BigInt!
+  accumulatedPoints: BigInt!
+  instantTvl: BigInt!
+  instantPointPerTVL: BigInt!
+  timeDiff: BigInt!
+  timestamp: BigInt!
+}
+
+type EigenPointStatus @entity(immutable: false) {
+  id: Bytes!
+  accumulatedPoints: BigInt!
+  pointPerTVL: BigInt!
+  lastUpdateTimestamp: BigInt!
+}
+
+type ReferralStatus @entity(immutable: false) {
+  id: Bytes!
+  totalTvl: BigInt!
+  totalTvl2: BigInt!
+  totalTvlPoints: BigInt!
+  totalTvlPoints2: BigInt!
+  totalUsers: Int!
+  totalGroups: Int!
+}
+
+type ReferralData @entity(immutable: false) {
+  id: Bytes!
+  tvl: BigInt!
+  tvl2: BigInt!
+  tvlPoints: BigInt!
+  tvlPoints2: BigInt!
+  referralPoints: BigInt!
+  referralPoints2: BigInt!
+  referrer: Bytes!
+  referralGroup: ReferralGroup!
+  referralCount: Int!
+  lastUpdateTimestamp: BigInt!
+  assets: [AssetHoldingData!]! @derivedFrom(field: "holder")
+  lastEigenPointPerTVL: BigInt!
+  eigenPoint: BigInt!
+  eigenPoint2: BigInt!
+}
+
+type ReferralGroup @entity(immutable: false) {
+  id: Bytes!
+  groupTVL: BigInt!
+  groupTVL2: BigInt!
+  boost: BigInt!
+  boost2: BigInt!
+  members: [ReferralData!]! @derivedFrom(field: "referralGroup")
+}
+
+type AssetHoldingData @entity(immutable: false) {
+  id: Bytes!
+  holder: ReferralData!
+  asset: TrackedMLRT!
+  assetAddr: Bytes!
+  amount: BigInt!
+  exchangeRate: BigInt!
+}
+
+type ReferralLog @entity(immutable: false) {
+  id: Bytes!
+  referrer: Bytes!
+  referee: Bytes!
+  referralPointEarned: BigInt!
+  referralPointEarned2: BigInt!
+  referralPointsAccumulated: BigInt!
+  referralPointsAccumulated2: BigInt!
+  timestamp: BigInt!
+}
+
+type AssetDeposit @entity(immutable: true) {
+  id: Bytes!
+  depositor: Bytes! # address
+  asset: Bytes! # address
+  depositAmount: BigInt! # uint256
+  referral: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+  exchangeRateRevert: String!
+  exchangeRate: BigInt!
+  instantBalance: BigInt!
+  instantTvl: BigInt!
+  instantTvlPoint: BigInt!
+  instantTvl2: BigInt!
+  instantTvlPoint2: BigInt!
+}
+
+type AssetTransfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+type TrackedMLRT @entity(immutable: true) {
+  id: Bytes!
+  underlying: Bytes!
+  strategy: Bytes!
+  addedTimestamp: BigInt!
+}
