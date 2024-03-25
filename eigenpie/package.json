@@ -1,18 +1,17 @@
 {
-  "name": "eigenpie-on-eth",
+  "name": "eigenpie-on-dev",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ magpiexyz-analytics/eigenpie-on-eth --network mainnet",
-    "deploy:dev": "graph deploy --node https://api.thegraph.com/deploy/ magpiexyz-analytics/eigenpie-on-dev --network mainnet",
-    "create-local": "graph create --node http://localhost:8020/ magpiexyz-analytics/eigenpie-on-eth",
-    "remove-local": "graph remove --node http://localhost:8020/ magpiexyz-analytics/eigenpie-on-eth",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 magpiexyz-analytics/eigenpie-on-eth",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ magpiexyz-analytics/eigenpie-on-dev",
+    "create-local": "graph create --node http://localhost:8020/ magpiexyz-analytics/eigenpie-on-dev",
+    "remove-local": "graph remove --node http://localhost:8020/ magpiexyz-analytics/eigenpie-on-dev",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 magpiexyz-analytics/eigenpie-on-dev",
     "test": "graph test"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.67.2",
+    "@graphprotocol/graph-cli": "0.68.4",
     "@graphprotocol/graph-ts": "0.32.0"
   },
   "devDependencies": {

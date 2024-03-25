@@ -1,91 +1,3 @@
-type EigenPointUpdateLog @entity(immutable: true) {
-  id: Bytes!
-  incomePoints: BigInt!
-  accumulatedPoints: BigInt!
-  instantTvl: BigInt!
-  instantPointPerTVL: BigInt!
-  timeDiff: BigInt!
-  timestamp: BigInt!
-}
-
-type EigenPointStatus @entity(immutable: false) {
-  id: Bytes!
-  accumulatedPoints: BigInt!
-  pointPerTVL: BigInt!
-  lastUpdateTimestamp: BigInt!
-}
-
-type ReferralStatus @entity(immutable: false) {
-  id: Bytes!
-  totalTvl: BigInt!
-  totalTvlPoints: BigInt!
-  totalUsers: Int!
-  totalGroups: Int!
-}
-
-type ReferralData @entity(immutable: false) {
-  id: Bytes!
-  tvl: BigInt!
-  tvlPoints: BigInt!
-  referralPoints: BigInt!
-  referrer: Bytes!
-  referralGroup: ReferralGroup!
-  referralCount: Int!
-  lastUpdateTimestamp: BigInt!
-  assets: [AssetHoldingData!]! @derivedFrom(field: "holder")
-  lastEigenPointPerTVL: BigInt!
-  eigenPoint: BigInt!
-}
-
-type ReferralGroup @entity(immutable: false) {
-  id: Bytes!
-  groupTVL: BigInt!
-  boost: BigInt!
-  members: [ReferralData!]! @derivedFrom(field: "referralGroup")
-}
-
-type AssetHoldingData @entity(immutable: false) {
-  id: Bytes!
-  holder: ReferralData!
-  asset: TrackedMLRT!
-  assetAddr: Bytes!
-  amount: BigInt!
-  exchangeRate: BigInt!
-}
-
-type ReferralLog @entity(immutable: false) {
-  id: Bytes!
-  referrer: Bytes!
-  referee: Bytes!
-  referralPointEarned: BigInt!
-  referralPointsAccumulated: BigInt!
-  timestamp: BigInt!
-}
-
-type AssetDeposit @entity(immutable: true) {
-  id: Bytes!
-  depositor: Bytes! # address
-  asset: Bytes! # address
-  depositAmount: BigInt! # uint256
-  referral: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-  exchangeRateRevert: String!
-  exchangeRate: BigInt!
-  instantBalance: BigInt!
-  instantTvl: BigInt!
-  instantTvlPoint: BigInt!
-}
-
-type AssetTransfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes!
-  to: Bytes!
-  amount: BigInt!
-  timestamp: BigInt!
-}
-
 type TrackedMLRT @entity(immutable: true) {
   id: Bytes!
   underlying: Bytes!
@@ -93,11 +5,64 @@ type TrackedMLRT @entity(immutable: true) {
   addedTimestamp: BigInt!
 }
 
-type mlrtLiquidityStatus @entity(immutable: false) {
-  id: String!
-  token0Balance: BigInt!
-  token1Balance: BigInt!
-  totalSupply: BigInt!
-  mlrtPerShare: BigInt!
-  updateTimestamp: BigInt!
+type PoolInfo @entity(immutable: false) {
+  id: Bytes! # hash(group, lpToken)
+  group: Bytes!
+  lpToken: LpInfo!
+  totalShares: BigInt!
+  totalUnclaimedShares: BigInt!
+  accEigenLayerPointPerShare: BigInt!
+  accEigenpiePointPerShare: BigInt!
+  lastRewardTimestamp: BigInt!
+}
+
+type UserBalanceInfo @entity {
+  id: Bytes! # hash(group, lpToken, user)
+  group: Bytes!
+  lpToken: LpInfo!
+  poolInfo: PoolInfo!
+  user: UserInfo!
+  shares: BigInt!
+  unclaimedShares: BigInt!
+  eigenLayerPointsDebt: BigInt!
+  eigenpiePointsDebt: BigInt!
+}
+
+type LpInfo @entity(immutable: false) {
+  id: Bytes! # hash(lpToken)
+  lpToken: Bytes!
+  eigenLayerPointsPerSec: BigInt!
+  eigenpiePointsPerSec: BigInt!
+  pools: [PoolInfo!]! @derivedFrom(field: "lpToken")
+  priceToETH: BigInt!
+  mLrtRatio: BigInt!
+}
+
+type UserInfo @entity(immutable: false) {
+  id: Bytes! # hash(user)
+  user: Bytes!
+  group: GroupInfo!
+  userBalances: [UserBalanceInfo!]! @derivedFrom(field: "user")
+  referrer: Bytes!
+  referralCount: BigInt!
+  eigenLayerPoints: BigInt!
+  eigenpiePoints: BigInt!
+  eigenpieReferralPoints: BigInt!
+}
+
+type GroupInfo @entity(immutable: false) {
+  id: Bytes! # hash(group)
+  group: Bytes!
+  groupBoost: BigInt!
+  members: [UserInfo!]! @derivedFrom(field: "group")
+  totalTvl: BigInt!
+}
+
+type GlobalInfo @entity(immutable: false) {
+  id: Bytes! # hash(bytes zero)
+  globalBoost: BigInt!
+  lastDailyUpdateAllPoolsTimestamp: BigInt!
+  totalTvl: BigInt!
+  totalEigenpiePoints: BigInt!
+  totalEigenLayerPoints: BigInt!
 }
